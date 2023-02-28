@@ -1,0 +1,9 @@
+.host {
+    margin: var(--margin-lg);
+}
+
+@media screen and (max-width: 768px) {
+    .host {
+        margin: var(--margin-sm);
+    }
+}

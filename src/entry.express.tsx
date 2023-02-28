@@ -11,14 +11,15 @@ import { createQwikCity, type PlatformNode } from '@builder.io/qwik-city/middlew
 import qwikCityPlan from '@qwik-city-plan';
 import render from './entry.ssr';
 import express from 'express';
+import fileupload from "express-fileupload";
+import cors from "cors";
+import compression from 'compression';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
 declare global {
   interface QwikCityPlatform extends PlatformNode {}
 }
-
-// import compression from 'compression';
 
 // Directories where the static assets are located
 const distDir = join(fileURLToPath(import.meta.url), '..', '..', 'dist');
@@ -34,8 +35,19 @@ const { router, notFound } = createQwikCity({ render, qwikCityPlan });
 // https://expressjs.com/
 const app = express();
 
+// Enable file uploads
+app.use(
+  fileupload({
+      createParentPath: true,
+  }),
+);
+// Enable handling CORS
+app.use(cors());
+// Enable handling JSON responses from REST API endpoints
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // Enable gzip compression
-// app.use(compression());
+app.use(compression());
 
 // Static asset handlers
 // https://expressjs.com/en/starter/static-files.html
@@ -47,6 +59,7 @@ app.use(router);
 
 // Use Qwik City's 404 handler
 app.use(notFound);
+
 
 // Start the express server
 app.listen(PORT, () => {

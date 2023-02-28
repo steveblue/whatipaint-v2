@@ -4,7 +4,6 @@ import styles from './gallery.scss?inline';
 
 export default component$(() => {
   useStylesScoped$(styles);
-
   return (
     <>
       <div>
